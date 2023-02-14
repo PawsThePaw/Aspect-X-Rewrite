@@ -1,0 +1,4 @@
+--Dont use this Loadstring
+--Using it will Make you stuck in a update
+--This loadstring here is whats responsible for Auto Updating Aspect X
+loadstring(game:HttpGet('https://raw.githubusercontent.com/PawsThePaw/Aspect-X-Rewrite/main/RewruteAPX.lua'))()
