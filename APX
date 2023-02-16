@@ -5,4 +5,4 @@
 --loadstring(game:HttpGet('https://raw.githubusercontent.com/PawsThePaw/Aspect-X-Rewrite/main/APX'))()--
 
 
-loadstring(game:HttpGet('https://raw.githubusercontent.com/PawsThePaw/Aspect-X-Rewrite/main/Protected.lua%20(23).txt'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/PawsThePaw/Aspect-X-Rewrite/main/Protected.lua%20(25).txt'))()
