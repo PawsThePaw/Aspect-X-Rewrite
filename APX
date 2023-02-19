@@ -1,8 +1,0 @@
---Dont use this Loadstring
---Using it will Make you stuck in a update
---This loadstring here is whats responsible for Auto Updating Aspect X
---Use this instead
---loadstring(game:HttpGet('https://raw.githubusercontent.com/PawsThePaw/Aspect-X-Rewrite/main/APX'))()--
-
-
-loadstring(game:HttpGet('https://raw.githubusercontent.com/PawsThePaw/Aspect-X-Rewrite/main/Protected.lua%20(25).txt'))()
