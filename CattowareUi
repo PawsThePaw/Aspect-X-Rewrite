@@ -1,0 +1,82 @@
+local TweenService = game:GetService("TweenService")
+local Notification = Instance.new("ScreenGui")
+local Holder = Instance.new("Frame")
+local UIListLayout = Instance.new("UIListLayout")
+local TweenService = game:GetService("TweenService")
+Notification.Name = "Notification"
+Notification.Parent = game.CoreGui
+Notification.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Holder.Name = "Holder"
+Holder.Parent = Notification
+Holder.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Holder.BackgroundTransparency = 1.000
+Holder.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Holder.Position = UDim2.new(0.0072954637, 0, 0.0105048735, 0)
+Holder.Size = UDim2.new(0, 243, 0, 240)
+UIListLayout.Parent = Holder
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 4)
+local function CattowareNotify(text, color, time)
+    local Template = Instance.new("Frame")
+    local UIGradient = Instance.new("UIGradient")
+    local ColorBar = Instance.new("Frame")
+    local TextLabel = Instance.new("TextLabel")
+
+    Template.Name = text
+    Template.Parent = Holder
+    Template.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    Template.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Template.Size = UDim2.new(0, 0, 0, 0)
+    Template.Transparency = 1
+
+    UIGradient.Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(147, 147, 147)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(39, 39, 39))}
+    UIGradient.Rotation = 90
+    UIGradient.Parent = Template
+
+    ColorBar.Name = "ColorBar"
+    ColorBar.Parent = Template
+    ColorBar.BackgroundColor3 = color
+    ColorBar.BorderSizePixel = 0
+    ColorBar.Size = UDim2.new(0, 2, 0, 22)
+    ColorBar.Transparency = 1
+    TextLabel.Parent = Template
+    TextLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    TextLabel.BackgroundTransparency = 1.000
+    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TextLabel.BorderSizePixel = 0
+    TextLabel.Position = UDim2.new(0, 8, 0, 0)
+    TextLabel.Size = UDim2.new(0, 0, 0, 22)
+    TextLabel.Font = Enum.Font.SourceSans
+    TextLabel.Text = text
+    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextLabel.TextSize = 14.000
+    TextLabel.TextStrokeTransparency = 0.000
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Transparency = 1
+
+    Template.Size = UDim2.new(0,TextLabel.TextBounds.X+13,0,22)
+    local goal2 = {}
+    goal2.Transparency = 0
+    local tweenInfo2 = TweenInfo.new(0.5)
+    local tween12 = TweenService:Create(Template, tweenInfo2, goal2)
+    local tween22 = TweenService:Create(ColorBar, tweenInfo2, goal2)
+    local tween32 = TweenService:Create(TextLabel, tweenInfo2, goal2)
+    tween12:Play()
+    tween22:Play()
+    tween32:Play()
+
+    task.delay(time,function()
+        local goal = {}
+        goal.Transparency = 1
+        local tweenInfo = TweenInfo.new(0.5)
+        local tween1 = TweenService:Create(Template, tweenInfo, goal)
+        local tween2 = TweenService:Create(ColorBar, tweenInfo, goal)
+        local tween3 = TweenService:Create(TextLabel, tweenInfo, goal)
+        tween1:Play()
+        tween2:Play()
+        tween3:Play()
+        task.delay(0.51,function()
+            Template:Destroy()
+        end)
+    end)
+end
