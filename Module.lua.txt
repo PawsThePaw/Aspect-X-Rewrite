@@ -789,79 +789,78 @@ function Library:Window(Title, Func, Options)
         TweenObject(ShadeFrame, 0.25, {BackgroundTransparency = 1})
     end
 
-    function WindowData:GetDate(Service, ...)
-        local Args = {...}
-        Service = CheckType(Service, "string", "local"):lower()
-    
-        -- Optimize date parsing for local dates
-        if Service == "local" then
-            local dateStr = CheckType(Args[1], "string", "12/12/1999")
-            local Day, Month, Year = dateStr:match("(%d+)[/-](%d+)[/-](%d+)") or dateStr:match("(%d+)[/-](%d+)[/-](%d+)")
-    
-            if not (Day and Month and Year) then
-                return false, "Invalid date format"
-            end
-    
-            -- Convert to time once
-            return os.time({
-                year = tonumber(Year),
-                month = tonumber(Month),
-                day = tonumber(Day),
-                hour = 0,
-                min = 0
-            })
-        elseif Service == "github" or Service == "bitbucket" then
-            -- Ensure all required arguments are present
-            if Args[1] and Args[2] and Args[3] then
-                local APIs = {
-                    github = ("https://api.github.com/repos/%s/%s/commits?path=%s&per_page=1"):format(Args[1], Args[2], Args[3]),
-                    bitbucket = ("https://api.bitbucket.org/2.0/repositories/%s/%s/commits?per_page=1&path=%s"):format(Args[1], Args[2], Args[3])
-                }
-    
-                local apiUrl = APIs[Service]
-                if apiUrl then
-                    local Response, Data = pcall(function()
-                        return HttpService:JSONDecode(game:HttpGet(apiUrl))
-                    end)
-    
-                    if Response and Data then
-                        local Year, Month, Day, Hour, Min, Sec
-    
-                        -- Use common matching logic for both services
-                        if not Data.message then
-                            if Service == "github" then
-                                Year, Month, Day, Hour, Min, Sec = Data[1].commit.author.date:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)Z")
-                            else -- "bitbucket"
-                                Year, Month, Day, Hour, Min, Sec = Data.values[1].date:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
-                            end
-    
-                            return os.time({
-                                year = tonumber(Year),
-                                month = tonumber(Month),
-                                day = tonumber(Day),
-                                hour = tonumber(Hour),
-                                min = tonumber(Min),
-                                sec = tonumber(Sec)
-                            })
-                        else
-                            return false, Data.message
-                        end
-                    else
-                        return false, "No data or failed API call"
-                    end
-                end
-            end
-        end
-    end
-    
+	function WindowData:GetDate(Service, ...)
+		local Args = {...}
+
+		Service = CheckType(Service, "string", "local"):lower()
+
+		if Service == "local" then
+			Args[1] = CheckType(Args[1], "string", "12/12/1999")
+
+			local Day, Month, Year = Args[1]:match("(%d+)[/-](%d+)[/-](%d+)")
+
+			if not Day then
+				Year, Month, Day = Args[1]:match("(%d+)[/-](%d+)[/-](%d+)")
+			end
+
+			return os.time({
+				year = tonumber(Year),
+				month = tonumber(Month),
+				day = tonumber(Day),
+				hour = 0,
+				min = 0
+			})
+		elseif Service == "github" or Service == "bitbucket" then
+			if Args[1] and Args[2] and Args[3] then
+				local APIs = {
+					Github = ("https://api.github.com/repos/%s/%s/commits?path=%s&per_page=1"):format(Args[1], Args[2], Args[3]),
+					Bitbucket = ("https://api.bitbucket.org/2.0/repositories/%s/%s/commits?per_page=1&path=%s"):format(Args[1], Args[2], Args[3])
+				}
+				if APIs[Service] then
+					local Response, Data = pcall(function()
+						return HttpService:JSONDecode(game:HttpGet(APIs[Service]))
+					end)
+
+					if not Data then
+						return false, "No data"
+					end
+
+					if not Data["message"] then
+						local Year, Month, Day, Hour, Min, Sec
+
+						if Service == "Github" then
+							Year, Month, Day, Hour, Min, Sec = Data[1].commit.author.date:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)Z")
+						elseif Service == "Bitbucket" then
+							Year, Month, Day, Hour, Min, Sec = Data.values[1].date:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)")
+						end
+
+						return os.time({
+							year = tonumber(Year),
+							month = tonumber(Month),
+							day = tonumber(Day),
+							hour = tonumber(Hour),
+							min = tonumber(Min),
+							sec = tonumber(Sec)
+						})
+					else
+						return false, Data["message"]
+					end
+
+					return false
+				end
+			end
+		end
+	end
+
     function WindowData:TryExecuteURL(URL)
-        local Success, Result = pcall(function()
-            return loadstring(game:HttpGet(URL), "Loady Script")()
-        end)
-    
-        return Success
+		local Success, Result = pcall(function()
+			return loadstring(game:HttpGet(URL), "Loady Script")()
+		end)
+
+		return Success
     end
+
+    return WindowData
 end
 
 return Library
-    
